@@ -56,14 +56,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.LinearRing;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.io.WKTReader;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/org/geomajas/spring/geomajasContext.xml", "commandContext.xml" })
@@ -99,7 +99,7 @@ public class WfsGetFeatureCommandTest {
 		servletContextHandler.addServlet(new ServletHolder(servlet),"/wfs/*");
 		server.setHandler(servletContextHandler);
 		server.start();
-		port = server.getConnectors()[0].getLocalPort();
+		port = 8086; //server.getConnectors()[0].getLocalPort();
 		servlet.setPort(port);
 		StringBuilder sb = new StringBuilder();
 		sb.append("myGeom:Point,");
@@ -328,9 +328,9 @@ public class WfsGetFeatureCommandTest {
 				if (value != null) {
 					WKTReader reader = new WKTReader();
 					try {
-						com.vividsolutions.jts.geom.Geometry other = reader.read(WktService.toWkt((Geometry) dtoValue));
+						org.locationtech.jts.geom.Geometry other = reader.read(WktService.toWkt((Geometry) dtoValue));
 						Assert.assertTrue("geometries differ",
-								other.equalsExact((com.vividsolutions.jts.geom.Geometry) value, 0.0001));
+								other.equalsExact((org.locationtech.jts.geom.Geometry) value, 0.0001));
 					} catch (Exception e) {
 						Assert.fail();
 					}

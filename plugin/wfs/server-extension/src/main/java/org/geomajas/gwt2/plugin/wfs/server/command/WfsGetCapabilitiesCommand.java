@@ -16,10 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.opengis.wfs.FeatureTypeListType;
-import net.opengis.wfs.FeatureTypeType;
-import net.opengis.wfs.WFSCapabilitiesType;
-
 import org.geomajas.command.CommandHasRequest;
 import org.geomajas.geometry.Bbox;
 import org.geomajas.global.ExceptionCode;
@@ -37,7 +33,7 @@ import org.geomajas.gwt2.plugin.wfs.server.dto.WfsFeatureTypeListDto;
 import org.geomajas.gwt2.plugin.wfs.server.dto.WfsGetCapabilitiesDto;
 import org.geomajas.service.DtoConverterService;
 import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.data.wfs.WFSDataStoreFactory;
+import org.geotools.data.wfs.impl.WFSDataAccessFactory;
 import org.geotools.data.wfs.internal.WFSGetCapabilities;
 import org.geotools.data.wfs.internal.v1_x.FeatureTypeInfoImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -46,9 +42,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.opengis.wfs.FeatureTypeListType;
+import net.opengis.wfs.FeatureTypeType;
+import net.opengis.wfs.WFSCapabilitiesType;
+
 /**
  * Command that issues WFS GetCapabilities request.
- * 
+ *
  * @author Jan De Moerloose
  *
  */
@@ -84,16 +84,16 @@ public class WfsGetCapabilitiesCommand implements
 		try {
 			String sourceUrl = request.getBaseUrl();
 			URL targetUrl = httpClientFactory.getTargetUrl(sourceUrl);
-			
+
 			// Create a WFS GetCapabilities URL:
 			URL url = URLBuilder.createWfsURL(targetUrl, request.getVersion(), "GetCapabilities");
 			String capa = url.toExternalForm();
-			
+
 			Map<String, Serializable> connectionParameters = new HashMap<String, Serializable>();
-			connectionParameters.put(WFSDataStoreFactory.URL.key, capa);
-			connectionParameters.put(WFSDataStoreFactory.TIMEOUT.key, 10000);
+			connectionParameters.put(WFSDataAccessFactory.URL.key, capa);
+			connectionParameters.put(WFSDataAccessFactory.TIMEOUT.key, 10000);
 			if (request.getStrategy() != null) {
-				connectionParameters.put(WFSDataStoreFactory.WFS_STRATEGY.key, request.getStrategy());
+				connectionParameters.put(WFSDataAccessFactory.WFS_STRATEGY.key, request.getStrategy());
 			}
 			WFSDataStore wfs = dataStoreFactory.createDataStore(connectionParameters,
 					httpClientFactory.create(sourceUrl));
@@ -123,10 +123,11 @@ public class WfsGetCapabilitiesCommand implements
 	private WfsFeatureTypeListDto create1xxFeatureTypeList(WFSDataStore wfs) {
 		WFSGetCapabilities capabilities = wfs.getWfsClient().getCapabilities();
 		WFSCapabilitiesType caps = (WFSCapabilitiesType) capabilities.getParsedCapabilities();
+
 		FeatureTypeListType featureTypeListType = caps.getFeatureTypeList();
 		WfsFeatureTypeListDto featureTypeListDto = new WfsFeatureTypeListDto();
 		for (Object o : featureTypeListType.getFeatureType()) {
-			FeatureTypeInfoImpl featureType = new FeatureTypeInfoImpl((FeatureTypeType) o);
+			FeatureTypeInfoImpl featureType = new FeatureTypeInfoImpl((FeatureTypeType) o, null);
 			WfsFeatureTypeDto wfsFeatureTypeDto = new WfsFeatureTypeDto();
 			// The name needs a prefix to be unique, use the literal name element here
 			String prefix = ((FeatureTypeType) o).getName().getPrefix();
@@ -155,9 +156,9 @@ public class WfsGetCapabilitiesCommand implements
 		net.opengis.wfs20.FeatureTypeListType featureTypeListType = caps.getFeatureTypeList();
 		WfsFeatureTypeListDto featureTypeListDto = new WfsFeatureTypeListDto();
 		for (Object o : featureTypeListType.getFeatureType()) {
-			org.geotools.data.wfs.internal.v2_0.FeatureTypeInfoImpl featureType = 
+			org.geotools.data.wfs.internal.v2_0.FeatureTypeInfoImpl featureType =
 					new org.geotools.data.wfs.internal.v2_0.FeatureTypeInfoImpl(
-					(net.opengis.wfs20.FeatureTypeType) o);
+					(net.opengis.wfs20.FeatureTypeType) o, null);
 			WfsFeatureTypeDto wfsFeatureTypeDto = new WfsFeatureTypeDto();
 			// The name needs a prefix to be unique, use the literal name element here
 			String prefix = featureType.getQName().getPrefix();

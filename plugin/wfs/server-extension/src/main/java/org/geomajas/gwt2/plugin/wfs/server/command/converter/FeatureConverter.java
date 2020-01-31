@@ -14,8 +14,8 @@ package org.geomajas.gwt2.plugin.wfs.server.command.converter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
-import org.geomajas.geometry.conversion.jts.GeometryConverterService;
-import org.geomajas.geometry.conversion.jts.JtsConversionException;
+import org.geomajas.internal.service.GeometryConverterService;
+import org.geomajas.internal.service.JtsConversionException;
 import org.geomajas.layer.feature.Attribute;
 import org.geomajas.layer.feature.Feature;
 import org.geomajas.layer.feature.attribute.BooleanAttribute;
@@ -26,15 +26,14 @@ import org.geomajas.layer.feature.attribute.IntegerAttribute;
 import org.geomajas.layer.feature.attribute.LongAttribute;
 import org.geomajas.layer.feature.attribute.ShortAttribute;
 import org.geomajas.layer.feature.attribute.StringAttribute;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 /**
  * Converts GeoTools simple features to Geomajas features. Extension of {@link FeatureConverter} to solve problem with

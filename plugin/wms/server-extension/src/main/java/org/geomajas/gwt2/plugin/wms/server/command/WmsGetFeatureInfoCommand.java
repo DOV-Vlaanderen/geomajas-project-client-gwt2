@@ -30,11 +30,11 @@ import org.geomajas.gwt2.plugin.wms.server.command.dto.WmsGetFeatureInfoResponse
 import org.geomajas.gwt2.plugin.wms.server.command.factory.WmsHttpClientFactory;
 import org.geomajas.gwt2.plugin.wms.server.command.factory.impl.DefaultWmsHttpClientFactory;
 import org.geomajas.layer.feature.Feature;
-import org.geotools.GML;
-import org.geotools.GML.Version;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Parser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,24 +57,21 @@ public class WmsGetFeatureInfoCommand implements
 	private final Logger log = LoggerFactory.getLogger(WmsGetFeatureInfoCommand.class);
 
 	private static final String PARAM_FORMAT = "info_format";
-	
+
 	private WmsHttpClientFactory httpClientFactory = new DefaultWmsHttpClientFactory();
 
 	@Override
 	public void execute(WmsGetFeatureInfoRequest request, WmsGetFeatureInfoResponse response) throws Exception {
 		HttpClient client = httpClientFactory.create(request.getUrl());
 		URL url = httpClientFactory.getTargetUrl(request.getUrl());
-		GML gml;
 
 		GetFeatureInfoFormat format = getFormatFromUrl(request.getUrl());
 		switch (format) {
 			case GML2:
-				gml = new GML(Version.GML2);
-				response.setFeatures(getFeaturesFromUrl(client, url, gml, request.getMaxCoordsPerFeature()));
+				response.setFeatures(getFeaturesFromUrl(client, url, new org.geotools.gml2.GMLConfiguration(), request.getMaxCoordsPerFeature()));
 				break;
 			case GML3:
-				gml = new GML(Version.GML3);
-				response.setFeatures(getFeaturesFromUrl(client, url, gml, request.getMaxCoordsPerFeature()));
+				response.setFeatures(getFeaturesFromUrl(client, url, new org.geotools.gml3.GMLConfiguration(), request.getMaxCoordsPerFeature()));
 				break;
 			case JSON:
 				response.setFeatures(getFeaturesFromJson(client, request, url, request.getMaxCoordsPerFeature()));
@@ -84,11 +81,11 @@ public class WmsGetFeatureInfoCommand implements
 				response.setWmsResponse(content);
 		}
 	}
-	
+
 	public WmsHttpClientFactory getHttpClientFactory() {
 		return httpClientFactory;
 	}
-	
+
 	public void setHttpClientFactory(WmsHttpClientFactory httpClientFactory) {
 		this.httpClientFactory = httpClientFactory;
 	}
@@ -127,7 +124,7 @@ public class WmsGetFeatureInfoCommand implements
 		return dtoFeatures;
 	}
 
-	private List<Feature> getFeaturesFromUrl(HttpClient client, URL url, GML gml, int maxCoordsPerFeature)
+	private List<Feature> getFeaturesFromUrl(HttpClient client, URL url, Configuration gml, int maxCoordsPerFeature)
 			throws IOException, SAXException, ParserConfigurationException {
 		HttpGet get = new HttpGet(url.toExternalForm());
 		HttpResponse response = client.execute(get);
@@ -135,8 +132,12 @@ public class WmsGetFeatureInfoCommand implements
 			get.releaseConnection();
 			throw new IOException("Server returned " + response.getStatusLine() + " for URL " + url.toExternalForm());
 		}
-		FeatureCollection<?, SimpleFeature> collection = gml.decodeFeatureCollection(response.getEntity().getContent());
-		List<Feature> dtoFeatures = new ArrayList<Feature>();
+
+        Parser parser = new Parser(gml);
+        parser.setStrict(false);
+        FeatureCollection<?, SimpleFeature> collection = (FeatureCollection<?, SimpleFeature>) parser.parse(response.getEntity().getContent());
+
+        List<Feature> dtoFeatures = new ArrayList<Feature>();
 		if (null == collection) {
 			return dtoFeatures; // empty list
 		}

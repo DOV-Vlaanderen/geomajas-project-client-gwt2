@@ -46,7 +46,7 @@ public class WfsGetCapabilitiesCommandTest {
 		servletContextHandler.addServlet(new ServletHolder(servlet),"/wfs/*");
 		server.setHandler(servletContextHandler);
 		server.start();
-		port = server.getConnectors()[0].getLocalPort();
+		port = 8087; //server.getConnectors()[0].getLocalPort();
 		servlet.setPort(port);
 	}
 

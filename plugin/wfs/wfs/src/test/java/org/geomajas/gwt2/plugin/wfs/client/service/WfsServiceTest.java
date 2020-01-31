@@ -15,10 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 
-import junit.framework.Assert;
-import net.opengis.wfs.FeatureTypeType;
-import net.opengis.wfs.WFSCapabilitiesType;
-
 import org.apache.tools.ant.filters.StringInputStream;
 import org.geomajas.geometry.Bbox;
 import org.geomajas.gwt2.plugin.wfs.client.protocol.WfsFeatureTypeInfo;
@@ -38,9 +34,13 @@ import org.opengis.geometry.Envelope;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
+import junit.framework.Assert;
+import net.opengis.wfs.FeatureTypeType;
+import net.opengis.wfs.WFSCapabilitiesType;
+
 /**
  * Testcase for the {@link WmsService} interface.
- * 
+ *
  * @author Jan De Moerloose
  */
 @RunWith(GwtMockitoTestRunner.class)
@@ -62,12 +62,14 @@ public class WfsServiceTest extends AbstractWfsServiceTest {
 
 	private WfsUrlTransformer toHelloWorld;
 
-	@Before
+	@Override
+    @Before
 	public void init() throws Exception {
 		super.init();
 		toHelloWorld = new WfsUrlTransformer() {
 
-			public String transform(WfsRequest request, String url) {
+			@Override
+            public String transform(WfsRequest request, String url) {
 				return HELLOWORLD;
 			}
 		};
@@ -90,7 +92,7 @@ public class WfsServiceTest extends AbstractWfsServiceTest {
 		int i = 0;
 		for (Object o : caps.getFeatureTypeList().getFeatureType()) {
 			WfsFeatureTypeInfo wfsFeatureTypeInfo = info.getFeatureTypeList().getFeatureTypes().get(i++);
-			FeatureTypeInfoImpl featureTypeType = new FeatureTypeInfoImpl((FeatureTypeType) o);
+			FeatureTypeInfoImpl featureTypeType = new FeatureTypeInfoImpl((FeatureTypeType) o, null);
 			Assert.assertTrue(wfsFeatureTypeInfo.getName().endsWith(featureTypeType.getName()));
 			Assert.assertEquals(featureTypeType.getTitle(), wfsFeatureTypeInfo.getTitle());
 			Assert.assertEquals(featureTypeType.getAbstract(), wfsFeatureTypeInfo.getAbstract());
@@ -136,7 +138,7 @@ public class WfsServiceTest extends AbstractWfsServiceTest {
 			@Override
 			public void dispose() {
 			}
-		});
+		}, null);
 
 		return response.getCapabilities();
 	}
