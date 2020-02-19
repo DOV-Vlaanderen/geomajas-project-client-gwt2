@@ -39,8 +39,8 @@ public class GwtResourceController extends ResourceController {
 	public GwtResourceController() {
 		setCompressionAllowed(false);
 	}
-	
-	@RequestMapping(value = "/**/*", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/**/*", method = RequestMethod.GET)
 	public void getResource(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		super.getResource(request, response);
