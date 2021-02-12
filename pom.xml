@@ -42,10 +42,12 @@
 	<properties>
 		<!-- geomajas versions -->
 		<gwt2-client-version-geomajas-server>1.18.3-dov-1.0</gwt2-client-version-geomajas-server>
+
 		<!-- gwt versions -->
-		<gwt2-client-version-gwt>2.8.2</gwt2-client-version-gwt>
+		<gwt2-client-version-gwt>2.9.0</gwt2-client-version-gwt>
 		<gwt2-client-version-gwt-exporter>2.4.0</gwt2-client-version-gwt-exporter>
 		<gwt2-client-version-allan-sauer-gwt-dnd>3.3.3</gwt2-client-version-allan-sauer-gwt-dnd>
+
 		<!-- maven plugins -->
 		<gwt2-client-version-maven-jar-plugin>2.2</gwt2-client-version-maven-jar-plugin>
 		<gwt2-client-version-maven-javadoc-plugin>2.9.1</gwt2-client-version-maven-javadoc-plugin>
@@ -55,7 +57,7 @@
 		<gwt2-client-version-cargo-maven2-plugin>1.2.1</gwt2-client-version-cargo-maven2-plugin>
 
 		<!-- other versions -->
-		<gwt2-client-version-spring>5.2.0.RELEASE</gwt2-client-version-spring>
+		<gwt2-client-version-spring>5.3.3</gwt2-client-version-spring>
 		<gwt2-client-version-vaadin-graphics>1.0.0.TX11</gwt2-client-version-vaadin-graphics>
 		<gwt2-client-version-geotools>21.0-dov-0.5</gwt2-client-version-geotools>
 		<gwt2-client-version-geotools-wfs>21.0-dov-0.5</gwt2-client-version-geotools-wfs>
@@ -64,7 +66,7 @@
 		<gwt2-client-version-jvnet-ogc>1.1.0</gwt2-client-version-jvnet-ogc>
 		<gwt2-client-version-xerces>2.11.0</gwt2-client-version-xerces>
 		<gwt2-client-version-commons-httpclient>2.0</gwt2-client-version-commons-httpclient>
-		<gwt2-client-version-apache-httpcomponents>4.2.1</gwt2-client-version-apache-httpcomponents>
+		<gwt2-client-version-apache-httpcomponents>4.5.12</gwt2-client-version-apache-httpcomponents>
 		<gwt2-client-version-hsqldb>1.8.0.7</gwt2-client-version-hsqldb>
 		<gwt2-client-version-javax-media-jai>1.1.3</gwt2-client-version-javax-media-jai>
 		<gwt2-client-version-jpedal>4.45-b-105</gwt2-client-version-jpedal>
