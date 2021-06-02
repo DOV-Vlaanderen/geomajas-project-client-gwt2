@@ -81,6 +81,7 @@
 		<gwt2-client-version-jackson2>2.4.3</gwt2-client-version-jackson2>
 		<gwt2-client-version-eclipse-jetty-aggregate>7.2.0.v20101020</gwt2-client-version-eclipse-jetty-aggregate>
         
+        
         <!-- acd bamboo build -->
         <acd.issueManagement.url>https://www.milieuinfo.be/jira</acd.issueManagement.url>
         <acd.ciManagement.system>Bamboo</acd.ciManagement.system>
