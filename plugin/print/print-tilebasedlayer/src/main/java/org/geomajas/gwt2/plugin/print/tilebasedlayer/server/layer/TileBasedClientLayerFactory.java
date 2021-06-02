@@ -31,18 +31,19 @@ import org.geomajas.layer.common.proxy.LayerHttpService;
 import org.geomajas.layer.tile.RasterTile;
 import org.geomajas.plugin.rasterizing.api.LayerFactory;
 import org.geomajas.plugin.rasterizing.command.dto.RasterLayerRasterizingInfo;
+import org.geomajas.plugin.rasterizing.command.dto.RasterizingConstants;
 import org.geomajas.plugin.rasterizing.layer.RasterDirectLayer;
 import org.geomajas.plugin.rasterizing.layer.RasterDirectLayer.UrlDownLoader;
 import org.geomajas.service.ConfigurationService;
 import org.geomajas.service.DispatcherUrlService;
 import org.geotools.map.Layer;
-import org.geotools.map.MapContext;
+import org.geotools.map.MapContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * This factory creates a GeoTools layer that is capable of rendering tile-based layers.
- * 
+ *
  * @author Jan De Moerloose
  */
 @Component
@@ -69,18 +70,20 @@ public class TileBasedClientLayerFactory implements LayerFactory {
 		this.threadsPerCore = threadsPerCore;
 	}
 
-	public boolean canCreateLayer(MapContext mapContext, ClientLayerInfo clientLayerInfo) {
+	@Override
+    public boolean canCreateLayer(MapContent mapContext, ClientLayerInfo clientLayerInfo) {
 		return clientLayerInfo instanceof TilebasedClientLayerInfo;
 	}
 
-	public Layer createLayer(MapContext mapContext, ClientLayerInfo clientLayerInfo) throws GeomajasException {
+	@Override
+    public Layer createLayer(MapContent mapContext, ClientLayerInfo clientLayerInfo) throws GeomajasException {
 		if (!(clientLayerInfo instanceof TilebasedClientLayerInfo)) {
 			throw new IllegalArgumentException(
 					"TileBasedClientLayerFactory.createLayer() should only be called with TilebasedClientLayerInfo");
 		}
 		TilebasedClientLayerInfo rasterInfo = (TilebasedClientLayerInfo) clientLayerInfo;
 		RasterLayerRasterizingInfo extraInfo = (RasterLayerRasterizingInfo) rasterInfo
-				.getWidgetInfo(RasterLayerRasterizingInfo.WIDGET_KEY);
+				.getWidgetInfo(RasterizingConstants.WIDGET_KEY);
 		List<RasterTile> tiles = rasterInfo.getTiles();
 
 		for (RasterTile rasterTile : tiles) {
@@ -98,10 +101,11 @@ public class TileBasedClientLayerFactory implements LayerFactory {
 		return rasterLayer;
 	}
 
-	public Map<String, Object> getLayerUserData(MapContext mapContext, ClientLayerInfo clientLayerInfo) {
+	@Override
+    public Map<String, Object> getLayerUserData(MapContent mapContext, ClientLayerInfo clientLayerInfo) {
 		Map<String, Object> userData = new HashMap<String, Object>();
 		RasterLayerRasterizingInfo extraInfo = (RasterLayerRasterizingInfo) clientLayerInfo
-				.getWidgetInfo(RasterLayerRasterizingInfo.WIDGET_KEY);
+				.getWidgetInfo(RasterizingConstants.WIDGET_KEY);
 		userData.put(USERDATA_KEY_SHOWING, extraInfo.isShowing());
 		return userData;
 	}
