@@ -20,7 +20,7 @@
 
 	<groupId>org.geomajas.project</groupId>
 	<artifactId>geomajas-project-client-gwt2</artifactId>
-	<version>2.4.3-dov-1.2-SNAPSHOT</version>
+	<version>2.4.3-dov-1.2</version>
 
 	<name>Geomajas GWT2 client: Parent POM</name>
 	<description>Geomajas GWT2 client: Parent POM</description>
@@ -41,7 +41,7 @@
 
 	<properties>
 		<!-- geomajas versions -->
-		<gwt2-client-version-geomajas-server>1.18.3-dov-1.2-SNAPSHOT</gwt2-client-version-geomajas-server>
+		<gwt2-client-version-geomajas-server>1.18.3-dov-1.2</gwt2-client-version-geomajas-server>
 
 		<!-- gwt versions -->
 		<gwt2-client-version-gwt>2.9.0</gwt2-client-version-gwt>
